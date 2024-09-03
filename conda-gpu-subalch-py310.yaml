@@ -12,6 +12,8 @@ dependencies:
   - pip
   - pip:
     - funasr
+    - pypinyin
+    - pytest
     - ruff
     - yapf
     - isort
