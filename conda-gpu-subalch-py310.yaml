@@ -1,0 +1,19 @@
+name: py310-gpu-reader
+channels:
+  - pytorch-nightly
+  - conda-forge
+  - nvidia
+dependencies:
+  - python=3.10.14
+  - pytorch-cuda=12.4
+  - pytorch
+  - torchvision
+  - torchaudio
+  - pip
+  - pip:
+    - funasr
+    - ruff
+    - yapf
+    - isort
+    - ipython
+    - jedi-language-server

@@ -1,0 +1,18 @@
+name: py310-osx-subalch
+channels:
+  - pytorch-nightly
+  - apple
+dependencies:
+  - python=3.10.14
+  - pytorch
+  - torchvision
+  - torchaudio
+  - pip
+  - pip:
+    - funasr
+    - pytest
+    - ruff
+    - yapf
+    - isort
+    - ipython
+    - jedi-language-server
