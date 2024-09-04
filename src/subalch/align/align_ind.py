@@ -1,6 +1,6 @@
 """Match the ground truth text with the predicted subtitles."""
 
-from .utils.compare_word import pinyin_similarity
+from subalch.utils.compare_word import pinyin_similarity
 
 CHR_DEFAULT = "✅"  # Placeholder for missing ground truth or prediction
 IDX_DEFAULT = -1  # Placeholder index

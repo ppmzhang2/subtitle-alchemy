@@ -13,6 +13,7 @@ dependencies:
   - pip:
     - funasr
     - pypinyin
+    - loguru
     - pytest
     - ruff
     - yapf

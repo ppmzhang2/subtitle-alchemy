@@ -1,4 +1,4 @@
-"""Test Faster R-CNN `box` module."""
+"""Test pinyin similarity in utils."""
 
 from subalch.utils.compare_word import pinyin_similarity
 
