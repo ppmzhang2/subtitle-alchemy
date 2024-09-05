@@ -1,9 +1,9 @@
-"""Test Faster R-CNN `box` module."""
+"""Test script alignment module."""
 
-from subalch.align_script import get_aligned_ind
-from subalch.align_script import get_aligned_ind_raw
-from subalch.align_script import get_mismatch_map
-from subalch.align_script import locate_mismatch
+from subalch.align.align_ind import get_aligned_ind
+from subalch.align.align_ind import get_aligned_ind_raw
+from subalch.align.align_ind import get_mismatch_map
+from subalch.align.align_ind import locate_mismatch
 
 S_PRD = """
 伏泰一到英国就开始学习一门新的语言他恼火的发现瘟疫这个词在英语里只有一个音节而

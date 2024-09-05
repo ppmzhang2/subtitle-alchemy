@@ -1,6 +1,5 @@
 # general things to ignore
 .DS_Store
-build/
 build_contrib/
 dist/
 .cache/

@@ -52,6 +52,8 @@ ignore = [
     "ANN002",  # missing-type-args
     "ANN003",  # missing-type-kwargs
     "RET504",  # unnecessary-assign
+    "COM812",  # TBD: some conflict
+    "ISC001",  # TBD: some conflict
 ]
 fixable = ["ALL"]
 unfixable = []
@@ -61,7 +63,12 @@ quote-style = "double"
 indent-style = "space"
 
 [lint.isort]
+# force-sort-within-sections and lines-between-types should be incompatible
+force-sort-within-sections = true
+lines-between-types = 0
 force-single-line = true
+no-sections = false
+from-first = false
 
 [lint.pydocstyle]
 convention = "google"
