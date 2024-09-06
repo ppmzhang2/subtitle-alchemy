@@ -1,4 +1,4 @@
-name: py310-gpu-reader
+name: py310-gpu-subalch
 channels:
   - pytorch-nightly
   - conda-forge
@@ -11,12 +11,13 @@ dependencies:
   - torchaudio
   - pip
   - pip:
+    - modelscope
     - funasr
     - pypinyin
     - loguru
+    - click
     - pytest
     - ruff
     - yapf
-    - isort
     - ipython
     - jedi-language-server

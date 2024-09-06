@@ -4,8 +4,8 @@ from pathlib import Path
 
 import numpy as np
 
-_K_TXT = "txt"
-_K_TL = "tl"
+_K_TXT = "text"
+_K_TL = "timeline"
 
 __all__ = ["save", "load"]
 
@@ -20,7 +20,7 @@ def save(key: str, folder: Path, txt: np.ndarray, tl: np.ndarray) -> None:
         tl (np.ndarray): 2D int32 timeline array (N, 2) of start-end timestamp
             pairs
     """
-    np.savez(folder / f"{key}.npz", **{_K_TXT: txt, _K_TL: tl})
+    np.savez(folder / f"{key}.npz", text=txt, timeline=tl)
 
 
 def load(path: Path) -> tuple[str, np.ndarray, np.ndarray]:

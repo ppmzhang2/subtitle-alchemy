@@ -1,6 +1,6 @@
 [project]
 name = "subtitle-alchemy"
-version = "0"
+version = "0.1.0"
 description = "Process subtitle files with ease."
 authors = [
     {name = "ZHANG Meng", email = "stall-breezes.0t@icloud.com"},
@@ -44,4 +44,4 @@ spaces_before_comment = 4
 split_before_logical_operator = true
 
 [project.scripts]
-subalch = "src.subalch:cli.__main__:cli"
+subalch = "subalch.cli.__main__:cli"

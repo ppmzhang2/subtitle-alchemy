@@ -60,6 +60,6 @@ def srt(tl: np.ndarray, text: np.ndarray, path: Path) -> None:
     with open(path, "w") as f:
         for i, (hmss, txt) in enumerate(zip(tl_str, text, strict=True)):
             f.write(f"{i+1}\n")
-            f.write(f"{hmss[i]}\n")
+            f.write(f"{hmss}\n")
             f.write(f"{txt}\n")
             f.write("\n")

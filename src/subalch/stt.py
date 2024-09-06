@@ -10,7 +10,7 @@ __all__ = ["generate"]
 
 
 def generate(
-    model: str, audio: Path, hotword: str
+    model: str, audio: Path, hotword: str = "",
 ) -> tuple[str, np.ndarray, np.ndarray]:
     """Generate transcript from audio file.
 
@@ -23,7 +23,7 @@ def generate(
     Args:
         model (str): Model name
         audio (Path): Path to audio file
-        hotword (str): Hotword to detect
+        hotword (str): Hot words to detect, separated by space, default ""
 
     Returns:
         tuple[str, np.ndarray, np.ndarray]: Tuple of key, words and timeline
@@ -37,7 +37,12 @@ def generate(
         vad_model="fsmn-vad",
         log_level="ERROR",
     )
-    res = model.generate(input=str(audio), batch_size_s=300, hotword=hotword)
+    if hotword == "":
+        res = model.generate(input=str(audio), batch_size_s=300)
+    else:
+        res = model.generate(
+            input=str(audio), batch_size_s=300, hotword=hotword
+        )
     if not isinstance(res, list):
         logger.error(f"Expected list, got {type(res)}")
         raise TypeError()

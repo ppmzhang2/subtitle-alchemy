@@ -27,12 +27,13 @@ from subalch import serde
     type=click.INT,
 )
 def generate(
-    src: Path,
-    folder: Path,
+    src: str,
+    folder: str,
     form: str = "srt",
     threshold: int = 500,
 ) -> None:
     """Generate subtitle from saved transcription."""
+    src, folder = Path(src), Path(folder)
     key, txt, tl = serde.load(src)
     gap = merge.tl2gap(tl, th=threshold)
     instr = merge.gap2instr(gap)

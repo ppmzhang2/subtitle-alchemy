@@ -25,11 +25,12 @@ from subalch import stt
     type=str,
 )
 def transcribe(
-    audio: Path,
-    folder: Path,
+    audio: str,
+    folder: str,
     model: str = "paraformer-zh",
     hotword: str = "",
 ) -> None:
     """Transcribe audio and save transcription."""
+    audio, folder = Path(audio), Path(folder)
     key, txt, tl = stt.generate(model, audio, hotword)
     serde.save(key, folder, txt, tl)
