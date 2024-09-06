@@ -1,7 +1,9 @@
 """Align subtitles using GT transcript and ASR output."""
 
-from subalch.align.align_ind import get_aligned_ind
+from subalch.align._index import get_aligned_index
+from subalch.align._tl import get_aligned_tl
 
 __all__ = [
-    "get_aligned_ind",
+    "get_aligned_index",
+    "get_aligned_tl",
 ]

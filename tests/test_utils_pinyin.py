@@ -1,6 +1,6 @@
 """Test pinyin similarity in utils."""
 
-from subalch.utils.compare_word import pinyin_similarity
+from subalch.utils.pinyin import pinyin_similarity
 
 
 def test_pinyin_similarity() -> None:
