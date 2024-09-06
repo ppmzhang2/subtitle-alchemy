@@ -1,14 +1,15 @@
-"""STT command line interface."""
+"""Transcribe audio and save transcription."""
 
 from pathlib import Path
 
 import click
-from subalch.stt import transcribe
+from subalch import serde
+from subalch import stt
 
 
 @click.command()
-@click.argument("src", type=click.Path(exists=True, file_okay=True))
-@click.argument("dst_dir", type=click.Path(exists=False, file_okay=False))
+@click.argument("audio", type=click.Path(exists=True, file_okay=True))
+@click.argument("folder", type=click.Path(exists=False, file_okay=False))
 @click.option(
     "--model",
     help="STT model, default paraformer-zh",
@@ -23,13 +24,12 @@ from subalch.stt import transcribe
     show_default=True,
     type=str,
 )
-def transcribe_cli(
-    src: Path,
-    dst_dir: Path,
-    model: str,
+def transcribe(
+    audio: Path,
+    folder: Path,
+    model: str = "paraformer-zh",
     hotword: str = "",
 ) -> None:
-    """Transcribe audio files in a directory."""
-    res = transcribe(src, model, hotword)
-    with open(dst_dir, "w") as f:
-        f.write(res)
+    """Transcribe audio and save transcription."""
+    key, txt, tl = stt.generate(model, audio, hotword)
+    serde.save(key, folder, txt, tl)
