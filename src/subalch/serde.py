@@ -23,7 +23,7 @@ def save(key: str, folder: Path, txt: np.ndarray, tl: np.ndarray) -> None:
     np.savez(folder / f"{key}.npz", **{_K_TXT: txt, _K_TL: tl})
 
 
-def load(path: Path) -> tuple[np.ndarray, np.ndarray]:
+def load(path: Path) -> tuple[str, np.ndarray, np.ndarray]:
     """Load transcript from npz file.
 
     Args:
@@ -31,8 +31,9 @@ def load(path: Path) -> tuple[np.ndarray, np.ndarray]:
 
     Returns:
         tuple[np.ndarray, np.ndarray]: Tuple of words and timeline arrays:
+        - key: str file name
         - txt: UTF-8 encoded words array (N, )
         - ts: int32 timeline array (N, 2) i.e. start-end timestamp pairs
     """
     with np.load(path) as data:
-        return data[_K_TXT], data[_K_TL]
+        return path.stem, data[_K_TXT], data[_K_TL]
