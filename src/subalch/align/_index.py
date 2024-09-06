@@ -1,28 +1,30 @@
 """Match the ground truth text with the predicted subtitles."""
 
-from subalch.utils.compare_word import pinyin_similarity
+import numpy as np
+
+from subalch.utils.pinyin import pinyin_similarity
 
 CHR_DEFAULT = "✅"  # Placeholder for missing ground truth or prediction
 IDX_DEFAULT = -1  # Placeholder index
 
 
-def get_aligned_ind_raw(seq_lab: list[str], seq_prd: list[str]) -> list[int]:
+def get_aligned_ind_raw(lab: np.ndarray, prd: np.ndarray) -> np.ndarray:
     """Get the raw aligned indices of predictions.
 
     Args:
-        seq_lab (list[str]): The ground truth sequence of characters.
-        seq_prd (list[str]): The predicted sequence of characters.
+        lab (list[str]): The 1D ground truth array of characters.
+        prd (list[str]): The 1D predicted array of characters.
 
     Returns:
-        list[int]: A list of indices representing the alignment between
-          `seq_lab` and `seq_prd`. It has the same length as `seq_lab`, where
-          each entry corresponds to either an index in the predicted sequence
-          `seq_prd` or `IDX_DEFAULT` if the prediction is missing or incorrect.
+        np.ndarray: A list of indices representing the alignment between
+          `lab` and `prd`. It has the same length as `lab`, where each entry
+          corresponds to either an index in the predicted sequence `prd` or
+          `IDX_DEFAULT` if the prediction is missing or incorrect.
           Note that falsely predicted characters are marked with `IDX_DEFAULT`,
           which is not the case for final output.
     """
-    n_lab = len(seq_lab)
-    n_prd = len(seq_prd)
+    n_lab = len(lab)
+    n_prd = len(prd)
     seq_prd_idx = list(range(n_prd))
 
     # DP table to store maximum matches
@@ -31,7 +33,7 @@ def get_aligned_ind_raw(seq_lab: list[str], seq_prd: list[str]) -> list[int]:
     # Fill the DP table
     for i in range(1, n_lab + 1):
         for j in range(1, n_prd + 1):
-            if seq_lab[i - 1] == seq_prd[j - 1]:
+            if lab[i - 1] == prd[j - 1]:
                 dp[i][j] = dp[i - 1][j - 1] + 1
             else:
                 dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
@@ -41,7 +43,7 @@ def get_aligned_ind_raw(seq_lab: list[str], seq_prd: list[str]) -> list[int]:
     seq_idx_aligned = []
     i_lab, i_prd = n_lab, n_prd
     while i_lab > 0 and i_prd > 0:
-        if seq_lab[i_lab - 1] == seq_prd[i_prd - 1]:
+        if lab[i_lab - 1] == prd[i_prd - 1]:
             # Case: Match
             # seq_chr_aligned.append(seq_prd[i_prd - 1])
             seq_idx_aligned.append(seq_prd_idx[i_prd - 1])
@@ -66,11 +68,11 @@ def get_aligned_ind_raw(seq_lab: list[str], seq_prd: list[str]) -> list[int]:
     # seq_chr_aligned.reverse()
     seq_idx_aligned.reverse()
 
-    return seq_idx_aligned
+    return np.array(seq_idx_aligned, dtype=np.int32)
 
 
 def locate_mismatch(
-    idx: list[int],
+    idx: np.ndarray,
     n_prd: int,
 ) -> tuple[list[list[int]], list[list[int]]]:
     """Find indices of the mis-matched characters in GT and predicted text.
@@ -87,7 +89,7 @@ def locate_mismatch(
       characters.
 
     Args:
-        idx (list[int]): A list of indices representing the alignment between
+        idx (np.ndarray): A list of indices representing the alignment between
           `seq_lab` and `seq_prd`. It has the same length as `seq_lab`, where
           each entry corresponds to either an index in the predicted sequence
           `seq_prd` or `IDX_DEFAULT` if the prediction is missing or incorrect.
@@ -126,7 +128,8 @@ def locate_mismatch(
             _flag_correct = False
         elif _flag_correct is False:
             sseq_idx_prd_incorrect.append(
-                list(range(_idx_prd_last_correct + 1, idx_prd)))
+                list(range(_idx_prd_last_correct + 1, idx_prd))
+            )
             sseq_idx_lab_incorrect.append(_seq_idx_lab_incorrect)
             _seq_idx_lab_incorrect = []
             _idx_lab_last_correct, _idx_prd_last_correct = idx_lab, idx_prd
@@ -139,7 +142,8 @@ def locate_mismatch(
     if _flag_correct is False:
         sseq_idx_lab_incorrect.append(_seq_idx_lab_incorrect)
         sseq_idx_prd_incorrect.append(
-            list(range(_idx_prd_last_correct + 1, n_prd)))
+            list(range(_idx_prd_last_correct + 1, n_prd))
+        )
 
     return sseq_idx_lab_incorrect, sseq_idx_prd_incorrect
 
@@ -248,9 +252,9 @@ def get_mismatch_map(
     """
     mapping = {}
 
-    for lab_grp, prd_grp in zip(sseq_idx_lab_incorrect,
-                                sseq_idx_prd_incorrect,
-                                strict=True):
+    for lab_grp, prd_grp in zip(
+        sseq_idx_lab_incorrect, sseq_idx_prd_incorrect, strict=True
+    ):
         n_lab = len(lab_grp)
         n_prd = len(prd_grp)
         # 1. Predicted wrong characters
@@ -271,28 +275,30 @@ def get_mismatch_map(
     return mapping
 
 
-def get_aligned_ind(seq_lab: list[str], seq_prd: list[str]) -> list[int]:
+def get_aligned_index(ar_lab: np.ndarray, ar_prd: np.ndarray) -> np.ndarray:
     """Get aligned indices of predictions.
 
     Args:
-        seq_lab (list[str]): The ground truth sequence of characters.
-        seq_prd (list[str]): The predicted sequence of characters.
+        ar_lab (np.ndarray): The ground truth sequence of characters.
+        ar_prd (np.ndarray): The predicted sequence of characters.
 
     Returns:
-        list[int]: A list of indices representing the alignment between
-          `seq_lab` and `seq_prd`. It has the same length as `seq_lab`, where
+        np.ndarray: A list of indices representing the alignment between
+          `ar_lab` and `ar_prd`. It has the same length as `ar_lab`, where
           each entry corresponds to either an index in the predicted sequence
-          `seq_prd` or `IDX_DEFAULT` if the prediction is missing. Falsely
+          `ar_prd` or `IDX_DEFAULT` if the prediction is missing. Falsely
           predicted character indices are also included.
     """
     _mat_match = {}
-    idx_aligned_raw = get_aligned_ind_raw(seq_lab, seq_prd)
+    idx_aligned_raw = get_aligned_ind_raw(ar_lab, ar_prd)
     for idx_lab, idx_prd in enumerate(idx_aligned_raw):
         if idx_prd != IDX_DEFAULT:
             _mat_match[idx_lab] = idx_prd
     sseq_idx_lab_mis, sseq_idx_prd_mis = locate_mismatch(
-        idx_aligned_raw, len(seq_prd))
-    _map_mis = get_mismatch_map(seq_lab, seq_prd, sseq_idx_lab_mis,
-                                sseq_idx_prd_mis)
+        idx_aligned_raw, len(ar_prd)
+    )
+    _map_mis = get_mismatch_map(
+        ar_lab, ar_prd, sseq_idx_lab_mis, sseq_idx_prd_mis
+    )
     _mat_match.update(_map_mis)
-    return [v for _, v in sorted(_mat_match.items())]
+    return np.array([v for _, v in sorted(_mat_match.items())], dtype=np.int32)
