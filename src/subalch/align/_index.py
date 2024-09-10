@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from subalch.utils.pinyin import pinyin_similarity
+from subalch.utils import pinyin
 
 CHR_DEFAULT = "✅"  # Placeholder for missing ground truth or prediction
 IDX_DEFAULT = -1  # Placeholder index
@@ -168,10 +168,10 @@ def _map_lab2prd_miss(
         for j in range(i, i + n_lab - n_prd + 1):
             idx_lab = grp_lab[j]
             lab_char = seq_lab[idx_lab]
-            sim = pinyin_similarity(lab_char, prd_char)
+            sim_pinyin = pinyin.sim(lab_char, prd_char)
 
-            if sim > sim_max:
-                sim_max = sim
+            if sim_pinyin > sim_max:
+                sim_max = sim_pinyin
                 idx_lab_maxsim = idx_lab
 
         if idx_lab_maxsim is not None:
@@ -205,10 +205,10 @@ def _map_lab2prd_extra(
         for j in range(i, i + n_prd - n_lab + 1):
             idx_prd = grp_prd[j]
             prd_char = seq_prd[idx_prd]
-            sim = pinyin_similarity(lab_char, prd_char)
+            sim_pinyin = pinyin.sim(lab_char, prd_char)
 
-            if sim > sim_max:
-                sim_max = sim
+            if sim_pinyin > sim_max:
+                sim_max = sim_pinyin
                 idx_prd_maxsim = idx_prd
 
         if idx_prd_maxsim is not None:
