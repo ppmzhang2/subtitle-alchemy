@@ -1,7 +1,7 @@
 """Test pinyin similarity in utils."""
 
 import numpy as np
-from subalch.utils import pinyin
+from subtitle_alchemy.utils import pinyin
 
 v1 = np.array(
     ["", "wth", "马", "关", "看", "发", "飞", "煤", "买", "大", "市", "饭"],

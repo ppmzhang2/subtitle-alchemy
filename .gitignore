@@ -1,6 +1,7 @@
 # general things to ignore
 .DS_Store
 build_contrib/
+build/
 dist/
 .cache/
 *.egg-info/

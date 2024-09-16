@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from subalch.utils import pinyin
+from subtitle_alchemy.utils import pinyin
 
 CHR_DEFAULT = "✅"  # Placeholder for missing ground truth or prediction
 IDX_DEFAULT = -1  # Placeholder index

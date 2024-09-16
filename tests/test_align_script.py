@@ -1,10 +1,10 @@
 """Test script alignment module."""
 
 import numpy as np
-from subalch.align._index import get_aligned_ind_raw
-from subalch.align._index import get_aligned_index
-from subalch.align._index import get_mismatch_map
-from subalch.align._index import locate_mismatch
+from subtitle_alchemy.align._index import get_aligned_ind_raw
+from subtitle_alchemy.align._index import get_aligned_index
+from subtitle_alchemy.align._index import get_mismatch_map
+from subtitle_alchemy.align._index import locate_mismatch
 
 S_PRD = """
 伏泰一到英国就开始学习一门新的语言他恼火的发现瘟疫这个词在英语里只有一个音节而

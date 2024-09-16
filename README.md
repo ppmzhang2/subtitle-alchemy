@@ -9,14 +9,19 @@
 
 ## Installation
 
-We recommend using [Conda](https://docs.conda.io/en/latest/) to manage the dependencies. Clone the repository and create a new Conda environment using the provided `conda-gpu-subalch-py310.yaml` file. Then, install the package in editable mode using `pip`:
+We recommend using [Conda](https://docs.conda.io/en/latest/) to manage the dependencies. Clone the repository and create a new Conda environment using the provided `conda-gpu-subalch-py310.yaml` file:
 
 ```bash
 git clone https://github.com/ppmzhang2/sub-alchemy.git
 cd sub-alchemy
 conda env create -f conda-gpu-subalch-py310.yaml
 conda activate py310-gpu-subalch
-pip install -e .
+```
+
+For CPU-only installations, simply use `pip` from PyPI:
+
+```bash
+pip install sub-alchemy[cpu]
 ```
 
 ## Usage

@@ -11,9 +11,12 @@ clean:
 	find . -name .coverage -delete
 	find . -name 'coverage.*' -delete
 	find . -name 'requirements*.txt' -delete
+	find . -name 'ruff.log' -delete
 	find . -type d -name .pytest_cache -exec rm -r {} +
 	find . -type d -name .ruff_cache -exec rm -r {} +
 	find . -type d -name .mypy_cache -exec rm -r {} +
+	find . -type d -name dist -exec rm -r {} +
+	find . -type d -name build -exec rm -r {} +
 
 .PHONY: lint
 ## pylint check

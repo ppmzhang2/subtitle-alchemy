@@ -4,9 +4,9 @@ from pathlib import Path
 
 import click
 from loguru import logger
-from subalch import build
-from subalch import merge
-from subalch import serde
+from subtitle_alchemy import forge
+from subtitle_alchemy import merge
+from subtitle_alchemy import serde
 
 
 @click.command()
@@ -40,7 +40,7 @@ def generate(
     txt_ = merge.merge_txt(txt, instr)
     tl_ = merge.merge_tl(tl, instr)
     if form == "srt":
-        build.srt(tl_, txt_, folder / f"{key}.srt")
+        forge.srt(tl_, txt_, folder / f"{key}.srt")
     else:
         logger.error(f"Unsupported format: {form}")
         raise ValueError()

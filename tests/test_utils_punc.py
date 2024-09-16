@@ -2,7 +2,7 @@
 # ruff: noqa: RUF001
 
 import numpy as np
-from subalch.utils import punc
+from subtitle_alchemy.utils import punc
 
 TEXT = """
 你好，World！这是一、二个测试。Hello, 世界! Testing123.

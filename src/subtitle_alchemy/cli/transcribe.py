@@ -3,8 +3,8 @@
 from pathlib import Path
 
 import click
-from subalch import serde
-from subalch import stt
+from subtitle_alchemy import serde
+from subtitle_alchemy import stt
 
 
 @click.command()
