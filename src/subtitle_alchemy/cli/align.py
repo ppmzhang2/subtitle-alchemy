@@ -4,12 +4,12 @@ from pathlib import Path
 
 import click
 from loguru import logger
-from subalch import build
-from subalch import merge
-from subalch.align import get_aligned_index
-from subalch.align import get_aligned_tl
-from subalch.serde import load
-from subalch.utils import punc
+from subtitle_alchemy import forge
+from subtitle_alchemy import merge
+from subtitle_alchemy.align import get_aligned_index
+from subtitle_alchemy.align import get_aligned_tl
+from subtitle_alchemy.serde import load
+from subtitle_alchemy.utils import punc
 
 
 @click.command()
@@ -53,7 +53,7 @@ def align(
     txt_ = merge.merge_txt(txt_aligned, instr)
     tl_ = merge.merge_tl(tl_aligned, instr)
     if form == "srt":
-        build.srt(tl_, txt_, folder / f"{key}.srt")
+        forge.srt(tl_, txt_, folder / f"{key}.srt")
     else:
         logger.error(f"Unsupported format: {form}")
         raise ValueError()

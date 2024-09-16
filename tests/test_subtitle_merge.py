@@ -1,7 +1,7 @@
 """Test merge module of subtitle package."""
 
 import numpy as np
-from subalch import merge
+from subtitle_alchemy import merge
 
 ARR_TL = np.array(
     [

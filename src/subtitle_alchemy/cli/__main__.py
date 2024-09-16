@@ -1,9 +1,9 @@
 """All CLI commands here."""
 
 import click
-from subalch.cli.align import align
-from subalch.cli.generate import generate
-from subalch.cli.transcribe import transcribe
+from subtitle_alchemy.cli.align import align
+from subtitle_alchemy.cli.generate import generate
+from subtitle_alchemy.cli.transcribe import transcribe
 
 
 @click.group()

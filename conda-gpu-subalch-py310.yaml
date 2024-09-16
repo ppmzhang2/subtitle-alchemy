@@ -11,13 +11,4 @@ dependencies:
   - torchaudio
   - pip
   - pip:
-    - modelscope
-    - funasr
-    - pypinyin
-    - loguru
-    - click
-    - pytest
-    - ruff
-    - yapf
-    - ipython
-    - jedi-language-server
+    - subtitle-alchemy

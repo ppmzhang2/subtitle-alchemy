@@ -1,13 +1,13 @@
 """Test script alignment module."""
 
 import numpy as np
-from subalch.align._tl import acc_default
-from subalch.align._tl import cum_default
-from subalch.align._tl import get_aligned_tl
-from subalch.align._tl import get_match_tl
-from subalch.align._tl import get_miss_tl
-from subalch.align._tl import impute_pre
-from subalch.align._tl import impute_suc
+from subtitle_alchemy.align._tl import acc_default
+from subtitle_alchemy.align._tl import cum_default
+from subtitle_alchemy.align._tl import get_aligned_tl
+from subtitle_alchemy.align._tl import get_match_tl
+from subtitle_alchemy.align._tl import get_miss_tl
+from subtitle_alchemy.align._tl import impute_pre
+from subtitle_alchemy.align._tl import impute_suc
 
 # Example usage:
 INDICES_ALIGNED = np.array(
