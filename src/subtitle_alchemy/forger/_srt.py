@@ -4,26 +4,7 @@ from pathlib import Path
 
 import numpy as np
 
-
-def _tl2hmss(tl: np.ndarray) -> np.ndarray:
-    """Convert the milliseconds timeline array to HH:MM:SS.mmm array.
-
-    Args:
-        tl (np.ndarray): 2D array (N, 2) of milliseconds
-
-    Returns:
-        np.ndarray: 2D array (N, 8) timeline i.e. hours (start), hours (end),
-        minutes (start), minutes (end), seconds (start), seconds (end),
-        milliseconds (start), milliseconds (end)
-    """
-    return np.column_stack(
-        (
-            tl // 3600000,  # hours
-            tl // 60000 % 60,  # minutes
-            tl // 1000 % 60,  # seconds
-            tl % 1000,  # milliseconds
-        )
-    )
+from subtitle_alchemy.utils import timeline
 
 
 def _hmss2srttl(tl: np.ndarray) -> np.ndarray:
@@ -46,16 +27,16 @@ def _hmss2srttl(tl: np.ndarray) -> np.ndarray:
     )
 
 
-def srt(tl: np.ndarray, text: np.ndarray, path: Path) -> None:
+def gen_srt(ms: np.ndarray, text: np.ndarray, path: Path) -> None:
     """Generate an SRT file from the timeline and text arrays.
 
     Args:
-        tl (np.ndarray): 2D array (N, 2) of milliseconds
+        ms (np.ndarray): 2D array (N, 2) of milliseconds
         text (np.ndarray): 1D array (N,) of text
         path (Path): Path to save the SRT file
     """
-    tl_hmss = _tl2hmss(tl)
-    tl_str = _hmss2srttl(tl_hmss)
+    hmss = timeline.ms2hmss(ms)
+    tl_str = _hmss2srttl(hmss)
 
     with open(path, "w") as f:
         for i, (hmss, txt) in enumerate(zip(tl_str, text, strict=True)):

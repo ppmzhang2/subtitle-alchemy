@@ -46,15 +46,15 @@ ARR_TXT_MERGED = np.array(
 )
 
 
-def test_subtitle_merge_tl2gap() -> None:
-    """Test `merge.tl2gap` function."""
-    gap = merge.tl2gap(ARR_TL, th=100)
-    assert np.array_equal(gap, ARR_GAP)
+def test_subtitle_merge_tl2adh() -> None:
+    """Test `merge.tl2adh` function."""
+    adh = merge.tl2adh(ARR_TL, th=100)
+    assert np.array_equal(adh, ARR_GAP)
 
 
-def test_subtitle_merge_gap2instr() -> None:
-    """Test `merge.gap2instr` function."""
-    instr = merge.gap2instr(ARR_GAP)
+def test_subtitle_merge_adh2instr() -> None:
+    """Test `merge.adh2instr` function."""
+    instr = merge.adh2instr(ARR_GAP)
     assert np.array_equal(instr, ARR_INSTR)
 
 
