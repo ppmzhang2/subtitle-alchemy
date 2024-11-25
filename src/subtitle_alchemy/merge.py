@@ -2,7 +2,7 @@
 
 There are two important types of arrays for merging control:
 
-- Gap array: 1D array with only 0s and 1s of shape (N, ) which indicates
+- Adhesion array: 1D array with only 0s and 1s of shape (N, ) which indicates
   either to merge (0) or not (1) with the next item.
   - The data type is uint8.
   - The last item is always 1.
@@ -15,14 +15,14 @@ There are two important types of arrays for merging control:
 
 import numpy as np
 
-_K_GAP_V_M = 0  # Gap value for merging
-_K_GAP_V_S = 1  # Gap value for splitting
+_K_ADHESION_V_M = 0  # adhesion value for merging
+_K_ADHESION_V_S = 1  # adhesion value for splitting
 
-__all__ = ["tl2gap", "gap2instr", "merge_tl", "merge_txt"]
+__all__ = ["tl2adh", "adh2instr", "merge_tl", "merge_txt"]
 
 
-def tl2gap(tl: np.ndarray, th: int = 500) -> np.ndarray:
-    """Compute the gap between each timestamp pair.
+def tl2adh(tl: np.ndarray, th: int = 500) -> np.ndarray:
+    """Compute the adhesion between each timestamp pair.
 
     Args:
         tl (np.ndarray): 2D array (N, 2) of start and end timelines
@@ -30,19 +30,19 @@ def tl2gap(tl: np.ndarray, th: int = 500) -> np.ndarray:
             is 500ms
 
     Returns:
-        np.ndarray: 1D array (N, ) gap array for computing merge instructions.
-            One `1` must be appended to the end of the array.
+        np.ndarray: 1D array (N, ) adhesion array for computing merge
+            instructions. One `1` must be appended to the end of the array.
     """
     gap_ms = tl[1:, 0] - tl[:-1, 1]
-    gap = np.where(gap_ms <= th, _K_GAP_V_M, _K_GAP_V_S)
-    return np.append(gap, _K_GAP_V_S).astype(np.uint8)
+    gap = np.where(gap_ms <= th, _K_ADHESION_V_M, _K_ADHESION_V_S)
+    return np.append(gap, _K_ADHESION_V_S).astype(np.uint8)
 
 
-def gap2instr(gap: np.ndarray) -> np.ndarray:
-    """Get merge instructions from a (N, ) gap array.
+def adh2instr(adh: np.ndarray) -> np.ndarray:
+    """Get merge instructions from a (N, ) adhesion array.
 
     Args:
-        gap (np.ndarray): 1D array (N, ) of 0s and 1s
+        adh (np.ndarray): 1D array (N, ) of 0s and 1s
 
     Returns:
         np.ndarray: (M, 2) merge instruction array which contains the start and
@@ -53,17 +53,21 @@ def gap2instr(gap: np.ndarray) -> np.ndarray:
     lo = 0
 
     # Iterate through the array
-    for idx, val in enumerate(gap):
+    for idx, val in enumerate(adh):
         # If the 1st value is 1, add a pair of 0s
-        if val == _K_GAP_V_S and idx == 0:
+        if val == _K_ADHESION_V_S and idx == 0:
             result.append([0, 0])
             lo = idx + 1
         # If the current value and the previous value are 1, add a pair
-        elif val == _K_GAP_V_S and idx > 0 and gap[idx - 1] == _K_GAP_V_S:
+        elif (
+            val == _K_ADHESION_V_S
+            and idx > 0
+            and adh[idx - 1] == _K_ADHESION_V_S
+        ):
             result.append([idx, idx])
             lo = idx + 1
         # Consecutive 0s ended
-        elif val == _K_GAP_V_S and idx > 0 and gap[idx - 1] == 0:
+        elif val == _K_ADHESION_V_S and idx > 0 and adh[idx - 1] == 0:
             result.append([lo, idx])
             lo = idx + 1
         # Ignore consecutive 0s

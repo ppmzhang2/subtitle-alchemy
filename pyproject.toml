@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "subtitle-alchemy"
-version = "0.1.7"
+version = "0.1.10"
 description = "Process subtitle files with ease."
 authors = [
     {name = "ZHANG Meng", email = "stall-breezes.0t@icloud.com"},

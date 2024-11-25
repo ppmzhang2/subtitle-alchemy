@@ -4,12 +4,12 @@ from pathlib import Path
 
 import click
 from loguru import logger
-from subtitle_alchemy import forge
 from subtitle_alchemy import merge
 from subtitle_alchemy.align import get_aligned_index
 from subtitle_alchemy.align import get_aligned_tl
-from subtitle_alchemy.serde import load
+from subtitle_alchemy.forger import gen_srt
 from subtitle_alchemy.utils import punc
+from subtitle_alchemy.utils import sl
 
 
 @click.command()
@@ -38,22 +38,22 @@ def align(
     threshold: int = 500,
 ) -> None:
     """Align predicted transcript with the ground truth speech."""
-    pred, truth, folder = Path(pred), Path(truth), Path(folder)
-    key, txt_pred, tl_pred = load(pred)
+    p_pred, p_truth, p_folder = Path(pred), Path(truth), Path(folder)
+    key, txt_pred, tl_pred, _ = sl.load(p_pred)  # TODO: support punctuation
 
-    with open(truth) as f:
+    with open(p_truth) as f:
         speech = f.read().strip()
     # TODO: support punctuation
     txt_aligned, _ = punc.separate(speech)
     idx_aligned = get_aligned_index(txt_aligned, txt_pred)
     tl_aligned = get_aligned_tl(idx_aligned, tl_pred)
 
-    gap = merge.tl2gap(tl_aligned, th=threshold)
-    instr = merge.gap2instr(gap)
+    gap = merge.tl2adh(tl_aligned, th=threshold)
+    instr = merge.adh2instr(gap)
     txt_ = merge.merge_txt(txt_aligned, instr)
     tl_ = merge.merge_tl(tl_aligned, instr)
     if form == "srt":
-        forge.srt(tl_, txt_, folder / f"{key}.srt")
+        gen_srt(tl_, txt_, p_folder / f"{key}.srt")
     else:
         logger.error(f"Unsupported format: {form}")
         raise ValueError()

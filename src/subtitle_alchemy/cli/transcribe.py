@@ -3,8 +3,8 @@
 from pathlib import Path
 
 import click
-from subtitle_alchemy import serde
-from subtitle_alchemy import stt
+from subtitle_alchemy.parser import stt
+from subtitle_alchemy.utils import sl
 
 
 @click.command()
@@ -31,6 +31,7 @@ def transcribe(
     hotword: str = "",
 ) -> None:
     """Transcribe audio and save transcription."""
-    audio, folder = Path(audio), Path(folder)
-    key, txt, tl = stt.generate(model, audio, hotword)
-    serde.save(key, folder, txt, tl)
+    p_audio = Path(audio)
+    p_folder = Path(folder)
+    key, txt, tl, punc = stt.generate(model, p_audio, hotword)
+    sl.save(key, p_folder, txt, tl, punc)

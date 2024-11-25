@@ -1,4 +1,4 @@
-"""STT Service."""
+"""STT Service to parse audio files."""
 
 from pathlib import Path
 
@@ -10,8 +10,10 @@ __all__ = ["generate"]
 
 
 def generate(
-    model: str, audio: Path, hotword: str = "",
-) -> tuple[str, np.ndarray, np.ndarray]:
+    model_name: str,
+    audio: Path,
+    hotword: str = "",
+) -> tuple[str, np.ndarray, np.ndarray, np.ndarray]:
     """Generate transcript from audio file.
 
     The return value is expected as a list with a single dict in it.
@@ -21,26 +23,28 @@ def generate(
     - ts: list of timestamp pair lists
 
     Args:
-        model (str): Model name
+        model_name (str): STT Model name
         audio (Path): Path to audio file
         hotword (str): Hot words to detect, separated by space, default ""
 
     Returns:
-        tuple[str, np.ndarray, np.ndarray]: Tuple of key, words and timeline
-            arrays:
+        tuple[str, np.ndarray, np.ndarray, np.ndarray]: Tuple of key, words and
+            timeline arrays:
         - key: file name
         - words: 1D UTF8 encoded array (N, ) of space-separated words
         - timeline: 2D int32 timeline array (N, 2) of start-end timestamp pairs
+        - punctuations: 1D int32 array (N, ) of punctuations
     """
-    model = AutoModel(
-        model=model,
+    mdl_stt = AutoModel(
+        model=model_name,
         vad_model="fsmn-vad",
         log_level="ERROR",
     )
+    mdl_punc = AutoModel(model="ct-punc", model_revision="v2.0.4")
     if hotword == "":
-        res = model.generate(input=str(audio), batch_size_s=300)
+        res = mdl_stt.generate(input=str(audio), batch_size_s=300)
     else:
-        res = model.generate(
+        res = mdl_stt.generate(
             input=str(audio), batch_size_s=300, hotword=hotword
         )
     if not isinstance(res, list):
@@ -53,6 +57,10 @@ def generate(
         raise TypeError()
 
     key = res["key"]
-    arr_txt = np.array(res["text"].split(), dtype="U")
+    txt = res["text"]
+    arr_txt = np.array(txt.split(), dtype="U")
     arr_ts = np.array(res["timestamp"], dtype=np.int32)
-    return key, arr_txt, arr_ts
+    arr_punc = mdl_punc.generate(input=txt)[0]["punc_array"]
+    # So characters with no punctuation are 0; this aligns with the utils.punc
+    arr_punc = (arr_punc - 1).numpy().astype(np.uint8)
+    return key, arr_txt, arr_ts, arr_punc
